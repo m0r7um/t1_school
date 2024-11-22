@@ -1,6 +1,11 @@
 package mortum.task1.services;
 
 import lombok.RequiredArgsConstructor;
+import mortum.task1.persistence.dto.TaskAddRequest;
+import mortum.task1.persistence.dto.TaskAddResponse;
+import mortum.task1.persistence.dto.TaskGetResponse;
+import mortum.task1.persistence.dto.TaskUpdateRequest;
+import mortum.task1.persistence.mappers.TaskMapper;
 import mortum.task1.persistence.models.Task;
 import mortum.task1.persistence.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -12,22 +17,28 @@ import java.util.List;
 @Service
 public class TaskService {
     final TaskRepository taskRepository;
+    final TaskMapper taskMapper;
 
-    public Task getTask(Integer id) {
-        return taskRepository.findById(id).orElse(null);
+    public TaskGetResponse getTask(Integer id) {
+        Task task = taskRepository.findById(id).orElseThrow();
+        return taskMapper.fromTaskToTaskGetResponse(task);
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<TaskGetResponse> getAllTasks() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream().map(taskMapper::fromTaskToTaskGetResponse).toList();
     }
 
-    public Task createTask(Task task) {
-        return taskRepository.save(task);
+    public TaskAddResponse createTask(TaskAddRequest task) {
+        Task taskEntity = taskMapper.fromTaskAddRequestToTask(task);
+        Task savedTaskEntity = taskRepository.save(taskEntity);
+        return taskMapper.fromTaskToTaskAddResponse(savedTaskEntity);
     }
 
     @Transactional
-    public Integer updateTask(Task task, Integer id) {
-        return taskRepository.update(task, id);
+    public Integer updateTask(TaskUpdateRequest task, Integer id) {
+        Task taskEntity = taskMapper.fromTaskUpdateRequestToTask(task);
+        return taskRepository.update(taskEntity, id);
     }
 
     @Transactional

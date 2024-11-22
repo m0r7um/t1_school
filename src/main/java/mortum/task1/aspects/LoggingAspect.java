@@ -18,11 +18,9 @@ public class LoggingAspect {
     @Before("@annotation(mortum.task1.aspects.annotations.IncomingPutRequestLogging)")
     public void logPutMethod(JoinPoint joinPoint) {
         List<Object> incomingRequestParams = List.of(joinPoint.getArgs());
-        log.info(
-                """
+        log.info("""
                         Incoming put request processing by {}
-                        Passed arguments: {}
-                        """,
+                        Passed arguments: {}""",
                 joinPoint.getTarget().getClass(),
                 incomingRequestParams
         );
