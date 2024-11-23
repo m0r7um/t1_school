@@ -29,8 +29,7 @@ public class LoggingAspect {
     @Around(value = "@annotation(mortum.task1.aspects.annotations.IncomingPostRequestLogging)")
     public Object logPostMethod(ProceedingJoinPoint pjp) {
         List<Object> incomingRequestParams = List.of(pjp.getArgs());
-        log.info(
-                """
+        log.info("""
                         Incoming post request processing by {}
                         Passed arguments: {}""",
                 pjp.getTarget(),

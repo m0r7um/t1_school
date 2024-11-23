@@ -3,15 +3,10 @@ package mortum.task1.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mortum.task1.aspects.annotations.*;
-import mortum.task1.persistence.dto.TaskAddRequest;
-import mortum.task1.persistence.dto.TaskAddResponse;
-import mortum.task1.persistence.dto.TaskGetResponse;
-import mortum.task1.persistence.dto.TaskUpdateRequest;
+import mortum.task1.persistence.dto.*;
 import mortum.task1.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,7 +17,7 @@ public class TaskController {
 
     @GetMethodLogging
     @GetMapping
-    public ResponseEntity<List<TaskGetResponse>> getTask() {
+    public ResponseEntity<TaskGetAllResponse> getTask() {
         return ResponseEntity.ok(taskService.getAllTasks());
     }
 

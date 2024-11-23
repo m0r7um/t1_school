@@ -1,10 +1,7 @@
 package mortum.task1.services;
 
 import lombok.RequiredArgsConstructor;
-import mortum.task1.persistence.dto.TaskAddRequest;
-import mortum.task1.persistence.dto.TaskAddResponse;
-import mortum.task1.persistence.dto.TaskGetResponse;
-import mortum.task1.persistence.dto.TaskUpdateRequest;
+import mortum.task1.persistence.dto.*;
 import mortum.task1.persistence.mappers.TaskMapper;
 import mortum.task1.persistence.models.Task;
 import mortum.task1.persistence.repositories.TaskRepository;
@@ -24,9 +21,12 @@ public class TaskService {
         return taskMapper.fromTaskToTaskGetResponse(task);
     }
 
-    public List<TaskGetResponse> getAllTasks() {
+    public TaskGetAllResponse getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
-        return tasks.stream().map(taskMapper::fromTaskToTaskGetResponse).toList();
+        TaskGetAllResponse taskGetAllResponse = new TaskGetAllResponse();
+        List<TaskGetAllDto> taskDtoList = tasks.stream().map(taskMapper::fromTaskToTaskGetAllDto).toList();
+        taskGetAllResponse.setTasks(taskDtoList);
+        return taskGetAllResponse;
     }
 
     public TaskAddResponse createTask(TaskAddRequest task) {
