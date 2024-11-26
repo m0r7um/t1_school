@@ -1,9 +1,6 @@
 package mortum.task1.persistence.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,4 +15,6 @@ public class Task {
     protected String title;
     protected String description;
     protected Integer userId;
+    @Enumerated(EnumType.STRING)
+    protected TaskStatus status;
 }

@@ -6,8 +6,40 @@ spring:
     username: sa
     password: password
     driverClassName: org.h2.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MY_MAIL}
+    password: ${MY_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            trust: smtp.gmail.com
+          starttls:
+            enable: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
+
+t1:
+  kafka:
+    bootstrap:
+      server: localhost:9092
+    consumer:
+      group-id: notifications-consumer-group
+      max-poll-records: 5
+    topic:
+      notifications: notifications
+    listener:
+      poll-timeout: 30000
+  mail:
+    addressee: ${ADDRESSEE_MAIL}
+    subject: "Task status changed"
+
+
+
+

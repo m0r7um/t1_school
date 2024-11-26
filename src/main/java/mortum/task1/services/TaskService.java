@@ -1,10 +1,14 @@
 package mortum.task1.services;
 
 import lombok.RequiredArgsConstructor;
+import mortum.task1.kafka.KafkaNotificationProducer;
+import mortum.task1.kafka.dto.NotificationDto;
 import mortum.task1.persistence.dto.*;
 import mortum.task1.persistence.mappers.TaskMapper;
 import mortum.task1.persistence.models.Task;
+import mortum.task1.persistence.models.TaskStatus;
 import mortum.task1.persistence.repositories.TaskRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +19,9 @@ import java.util.List;
 public class TaskService {
     final TaskRepository taskRepository;
     final TaskMapper taskMapper;
+    final KafkaNotificationProducer kafkaNotificationProducer;
+    @Value("${t1.kafka.topic.notifications}")
+    String topic;
 
     public TaskGetResponse getTask(Integer id) {
         Task task = taskRepository.findById(id).orElseThrow();
@@ -37,8 +44,14 @@ public class TaskService {
 
     @Transactional
     public Integer updateTask(TaskUpdateRequest task, Integer id) {
+        TaskStatus oldStatus = taskRepository.findById(id).orElseThrow().getStatus();
+        boolean isStatusUpdated = oldStatus != task.getStatus();
         Task taskEntity = taskMapper.fromTaskUpdateRequestToTask(task);
-        return taskRepository.update(taskEntity, id);
+        Integer updatedCount = taskRepository.update(taskEntity, id);
+        if (updatedCount != 0 && isStatusUpdated) {
+            kafkaNotificationProducer.sendTo(topic, new NotificationDto(id, task.getStatus()), task.getUserId());
+        }
+        return updatedCount;
     }
 
     @Transactional
