@@ -93,7 +93,7 @@ public class KafkaConfig {
         return handler;
     }
 
-    @Bean("client")
+    @Bean("notificationKafkaTemplate")
     public KafkaTemplate<String, NotificationDto> kafkaTemplate(ProducerFactory<String, NotificationDto> producerPatFactory) {
         return new KafkaTemplate<>(producerPatFactory);
     }
@@ -109,7 +109,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaNotificationProducer producerClient(@Qualifier("client") KafkaTemplate<String, NotificationDto> template) {
+    public KafkaNotificationProducer producerClient(@Qualifier("notificationKafkaTemplate") KafkaTemplate<String, NotificationDto> template) {
         template.setDefaultTopic(notificationsTopic);
         return new KafkaNotificationProducer(template);
     }

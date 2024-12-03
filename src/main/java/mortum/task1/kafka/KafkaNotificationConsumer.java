@@ -11,6 +11,8 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -20,13 +22,13 @@ public class KafkaNotificationConsumer {
     @KafkaListener(id = "${t1.kafka.consumer.group-id}",
             topics = "${t1.kafka.topic.notifications}",
             containerFactory = "kafkaListenerContainerFactory")
-    public void listener(@Payload NotificationDto notification,
+    public void listener(@Payload List<NotificationDto> notifications,
                          Acknowledgment ack,
                          @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                          @Header(KafkaHeaders.RECEIVED_KEY) String key) {
-        log.info("Received notification. Topic: {} key: {}, value: {}", topic, key, notification);
+        log.info("Received notifications. Topic: {} key: {}, value: {}", topic, key, notifications);
         try {
-            notificationService.sendNotification(notification);
+            notifications.forEach(notificationService::sendNotification);
             ack.acknowledge();
         } catch (Exception e) {
             log.error("Error sending notification {}", e.getMessage());

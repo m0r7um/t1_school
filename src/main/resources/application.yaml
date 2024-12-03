@@ -37,6 +37,7 @@ t1:
     listener:
       poll-timeout: 30000
   mail:
+    from: ${MY_MAIL}
     addressee: ${ADDRESSEE_MAIL}
     subject: "Task status changed"
 

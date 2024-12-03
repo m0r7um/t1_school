@@ -15,7 +15,14 @@ public class KafkaNotificationProducer {
         log.info("Sending message to topic {}", topic);
         log.info("Message {}", message);
         try {
-            template.send(topic, key.toString(), message).get();
+            template.send(topic, key.toString(), message)
+                    .whenComplete((result, ex) -> {
+                        if (ex == null) {
+                            log.info("Published event to topic {}: value = {}", topic, message.toString());
+                        } else {
+                            throw new RuntimeException(ex);
+                        }
+                    });
         } catch (Exception e) {
             log.error("Error sending message to topic {}, error message: {}", topic, e.getMessage());
             log.error("Message {}", message);
