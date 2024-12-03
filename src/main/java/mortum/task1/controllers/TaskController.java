@@ -1,14 +1,12 @@
 package mortum.task1.controllers;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import mortum.task1.aspects.annotations.*;
 import mortum.task1.persistence.dto.*;
 import mortum.task1.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RestController
 @RequestMapping(value = "/tasks")
 @RequiredArgsConstructor
