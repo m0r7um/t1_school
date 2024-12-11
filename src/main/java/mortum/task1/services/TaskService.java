@@ -1,6 +1,7 @@
 package mortum.task1.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import mortum.task1.kafka.KafkaNotificationProducer;
 import mortum.task1.kafka.dto.NotificationDto;
 import mortum.task1.persistence.dto.*;
@@ -20,6 +21,8 @@ public class TaskService {
     final TaskRepository taskRepository;
     final TaskMapper taskMapper;
     final KafkaNotificationProducer kafkaNotificationProducer;
+
+    @Setter
     @Value("${t1.kafka.topic.notifications}")
     String topic;
 
