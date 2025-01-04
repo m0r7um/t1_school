@@ -41,6 +41,10 @@ t1:
     addressee: ${ADDRESSEE_MAIL}
     subject: "Task status changed"
 
+security:
+  token: "4c7d04c4217053e459b77468a100470e6142104da60faa32f00757296cc20b37"
+  expiration-time-ms: 86400000
+
 
 
 
